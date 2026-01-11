@@ -18,6 +18,13 @@ The Atlas Insurance Company data engineering and analysis project is a strategic
 To enable a data-driven culture at Atlas Insurance by providing a secure, scalable, and trusted data platform that turns raw data into a strategic asset.
 
 **Key Business Objectives:**
+1. **Quantify Current State:** Determine actual loss ratios and combined ratios across all products
+2. **Identify Problem Areas:** Pinpoint specific products, segments, or regions with unsustainable loss experience
+3. **Establish Benchmarks:** Compare performance against available industry standards.
+4. **Create Baseline Models:** Develop initial pricing and reserving models based on historical data
+5. **Building Monitoring Foundation:** Implement systems to track ongoing performance.
+
+**Note:** Specific numerical targets will be established after initial analysis reveals current performance levels. The project will first answer "Where are we?" before determining "Where should we go?"
 
 #### Business Success Criteria
 #### Inventory Resources
