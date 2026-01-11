@@ -104,6 +104,10 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
   - **Structure: Script** `[action]_[target_object]_[layer]`  
   Example: `merge_dim_customer_silver`, `insert_into_fct_transactions_silver`
 
+|     **Item**      | **Naming Conversion**         | 
+| Workspace         | wk                            |
+| Dataflow Gen2     | dfg2_[action]_[layer]_[data]  |
+
 ---
 ## 7. Project Timeline & Milestones (Phased Approach)
 ### Phase 1: 
