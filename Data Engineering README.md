@@ -42,13 +42,15 @@ The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) impleme
 ![Data Architecture](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/High-level-data-architecture.png)
 
 ### 4. Technology Stack
-|  **Category**   |  **Technology**  |                     **Rationale**                      |
-|-----------------|------------------|--------------------------------------------------------|
-| Platform        | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
-| Storage         | Microsoft Fabric - Lakehouse - Data Warehouse | Unified platform for ETL, collaboration, and analytics |
-| Orchestration   | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
-| Processing      | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
-| Version Control | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
+|  **Category**   |                   **Technology**                     |                     **Rationale**                      |
+|-----------------|------------------------------------------------------|--------------------------------------------------------|
+| Platform        | Microsoft Fabric                                     | Unified platform for ETL, collaboration, and analytics |
+| Storage         | Microsoft Fabric (Lakehouse, Data Warehouse)         | Unified platform for ETL, collaboration, and analytics |
+| Orchestration   | Microsoft Fabric (Data Pipeline, Notebook)           | Unified platform for ETL, collaboration, and analytics |
+| Processing      | Microsoft Fabric (Dataflow Gen2, Notebook, Pipeline) | Unified platform for ETL, collaboration, and analytics |
+| Version Control | Git (GitHub)                                         | Unified platform for ETL, collaboration, and analytics |
+
+### 5. 
 
 
 
