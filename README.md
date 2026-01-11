@@ -27,6 +27,7 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 **Note:** Specific numerical targets will be established after initial analysis reveals current performance levels. The project will first answer "Where are we?" before determining "Where should we go?"
 
 #### Business Success Criteria
+
 #### Inventory Resources
 **Personnel**
 ---
@@ -39,14 +40,23 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 ---
 | **Location** | **Storage Type** | **Description** | **Contacts** |
 |----------|------------------|----------|-------------------------|
-|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/claims_history.parquet) | parquet | Claims history data | nhamo.innotaku@gmail.com |
-|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/insurance_applicants.parquet) | parquet | Insurance Applicants | nhamo.innotaku@gmail.com |
-|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/insurance_policies.parquet) | parquet | Insurance policies data | nhamo.innotaku@gmail.com |
-|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/payment_history.parquet) | parquet | Premium payment data| nhamo.innotaku@gmail.com |
+|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/claims_history.parquet) | Parquet | Claims history data | nhamo.innotaku@gmail.com |
+|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/insurance_applicants.parquet) | Parquet | Insurance Applicants data| nhamo.innotaku@gmail.com |
+|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/insurance_policies.parquet) | Parquet | Insurance policies data | nhamo.innotaku@gmail.com |
+|[github](https://github.com/inhamo/Datasets-Final/blob/main/insurance_data/payment_history.parquet) | Parquet | Premium payment data| nhamo.innotaku@gmail.com |
 
 **Tech Stack**
 **Data Engineering**
-- Microsoft Fabric
+- **Orchestration**
+  - Microsoft Fabric (PySpark, Python)
+- **Quality**
+  - 
+- **Storage**
+  - Lakehouse (raw data and staging data)
+  - Warehouse (cleaned data)
+- **Processing**
+  - Microsoft Fabric (Dataflow Gen2, Pipeline, Notebook(Python, PySpark))
+
 
 **Data Analysis**
 - Power BI
@@ -54,10 +64,10 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 
 **Business Assumptions**
 1. Historical loss patterns will continue into the near future.
-2. Regulatory environment remains stable during implementation
-3. Customer behaviour won't change dramatically due to price increases
-4. Sufficient data quality exists to build credible models
-5. Market will tolerate price increases if risk-based  and justified.
+2. Historical data (2015-2020) is sufficiently representative to build foundational models.
+3. Regulatory environment remains stable during implementation
+4. Customer behaviour won't change dramatically due to price increases
+5. The business has capacity to implement recommended changes.
 
 **Data Assumptions**
 1. Historical data is representative of future business
@@ -65,6 +75,12 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 3. Data completeness > 85% for critical fields
 4. No systematic bias in data collection process
 5. External data sources will remain available and reliable
+
+### Constraints
+**Project Constraints**
+- **Unknown Starting Point:** Cannot pre-define specific numerical targets.
+
+
 
 
 
