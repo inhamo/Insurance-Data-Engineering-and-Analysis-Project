@@ -10,10 +10,10 @@
 **Vision:** Transform insurance operation through data-driven insights and automation 
 **Core Problem Statement**: Siloed data across policy, claims, customer systems leading to inefficient pricing, slow claims, and missed opportunities
 
-#### Background 
+##### 1.1 Background 
 The Atlas Insurance Company data engineering and analysis project is a strategic initiative to create a single source of truth for all insurance data for anlysis and modelling. This centralized, modern data platform will empower the organization with accurate, timely, and accessible data for regulatory reporting, advanced customer analytics, risk management, and operational intelligence. By moving away from seperate data sources and fragemented reports, we aim to drive efficiency, enhance decision-making, and maintain a competitive edge in the market. 
 
-#### Business Objective 
+#### 1.2 Business Objective 
 **Vision:**
 To enable a data-driven culture at Atlas Insurance by providing a secure, scalable, and trusted data platform that turns raw data into a strategic asset.
 
@@ -26,17 +26,17 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 
 **Note:** Specific numerical targets will be established after initial analysis reveals current performance levels. The project will first answer "Where are we?" before determining "Where should we go?"
 
-#### Business Success Criteria
+##### Business Success Criteria
 
-#### Inventory Resources
-**Personnel**
+#### 1.3 Inventory Resources
+#### Personnel
 ---
 | **Name** | **Organization** | **Role** | **Contact Information** |
 |----------|------------------|----------|-------------------------|
 |Innocent | Data Engineering | Data engineer | takueinno@takueinnogmail.onmicrosoft.com |
 |Nomusa| Data Analyst and BI Intelligence | Data Analyst | Nomusa@takueinnogmail.onmicrosoft.com |
 
-**Data**
+##### Data
 ---
 | **Location** | **Storage Type** | **Description** | **Contacts** |
 |----------|------------------|----------|-------------------------|
