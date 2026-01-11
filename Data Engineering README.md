@@ -45,14 +45,72 @@ The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) impleme
 |  **Category**   |                   **Technology**                     |                     **Rationale**                      |
 |-----------------|------------------------------------------------------|--------------------------------------------------------|
 | Platform        | Microsoft Fabric                                     | Unified platform for ETL, collaboration, and analytics |
-| Storage         | Microsoft Fabric (Lakehouse, Data Warehouse)         | Unified platform for ETL, collaboration, and analytics |
-| Orchestration   | Microsoft Fabric (Data Pipeline, Notebook)           | Unified platform for ETL, collaboration, and analytics |
-| Processing      | Microsoft Fabric (Dataflow Gen2, Notebook, Pipeline) | Unified platform for ETL, collaboration, and analytics |
-| Version Control | Git (GitHub)                                         | Unified platform for ETL, collaboration, and analytics |
+| Storage         | Microsoft Fabric (Lakehouse, Data Warehouse)         | Durable object storage for all data layers             |
+| Orchestration   | Microsoft Fabric (Data Pipeline, Notebook)           | Schedule, manage, and monitor complex data pipelines   |
+| Processing      | Microsoft Fabric (Dataflow Gen2, Notebook, Pipeline) | Easy for transforming the data                         |
+| Version Control | Git (GitHub)                                         | For all code (SQL, PySpark, Python)                    |
 
-### 5. 
+### 5. Data Governance & Quality Framework
+- **Data Ownership:** Each data domain will have a designated Business Data Owner.
+- **Source System Documentation:** All data sources will be formally documented with metadata including:
+  - Source System
+  - Extraction Method
+  - Extraction Frequency
+  - Data Owner
+  - Data Classification (PII, Confidential, Public)
+  - Retention Policy
+- **Data Quality (DQ):** DQ checks will be implemented at each layer
 
+## 6. Naming Conventions & Standards
 
+Adherence to these conventions is mandatory to ensure consistency, improve readability, and simplify maintenance.
+
+### General Principles
+
+- **Case:** Use `snake_case` for all names.
+- **Reserved Words:** Avoid SQL reserved keywords (e.g., use `transaction_date` instead of `date`).
+- **Clarity & Brevity:** Names must be clear and descriptive without unnecessary abbreviation.
+
+### Table Naming Conventions by Layer
+
+- **Bronze Layer (Raw):** `[source_system]_[entity]`  
+  Example: `core_banking_customer`, `finance_transactions`
+
+- **Silver Layer (Cleansed):** Use a clear, singular noun for the business entity. Use `fact` and `dim` prefixes for normalized tables.  
+  Example: `dim_customer`, `fact_account`, `fact_customers`, `dim_customer_identifications`
+
+- **Gold Layer (Business Semantics):** `[domain_entity_purpose]`  
+  Example: `customer_360_wide`, `compliance_insurance_summary`
+
+### Column Naming Conventions
+
+- **General Rule:** Use descriptive, singular nouns in `snake_case`.  
+  Example: `first_name`, `account_balance`, `effective_date`
+
+- **Surrogate Keys:** `[table_name]_sk`  
+  Example: `customer_sk`
+
+- **Technical Columns:**  
+  - `created_timestamp`  
+  - `modified_timestamp`  
+  - `source_system`  
+  - `batch_id`
+
+### Stored Procedure & Script Naming
+
+- **Structure: Procedure** `pcd_[action]_[target_object]_[layer]`  
+  Example: `pcd_merge_dim_customer_silver`, `pcd_insert_into_fct_transactions_silver`
+
+  - **Structure: Script** `[action]_[target_object]_[layer]`  
+  Example: `merge_dim_customer_silver`, `insert_into_fct_transactions_silver`
+
+---
+## 7. Project Timeline & Milestones (Phased Approach)
+### Phase 1: 
+### Phase 2:
+### Phase 3: 
+
+---
 
 
 
