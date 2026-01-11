@@ -6,9 +6,9 @@
 2. [Stakeholder Requirements by Department](#2-stakeholder-requirements-by-department)
 ---
 ### 1. Project Context & Vision
-**Project Name:** Atlas Insurance Analytics Platform
-**Vision:** Transform insurance operation through data-driven insights and automation 
-**Core Problem Statement**: Siloed data across policy, claims, customer systems leading to inefficient pricing, slow claims, and missed opportunities
+- **Project Name:** Atlas Insurance Analytics Platform
+- **Vision:** Transform insurance operation through data-driven insights and automation 
+- **Core Problem Statement**: Siloed data across policy, claims, customer systems leading to inefficient pricing, slow claims, and missed opportunities
 
 ##### 1.1 Background 
 The Atlas Insurance Company data engineering and analysis project is a strategic initiative to create a single source of truth for all insurance data for anlysis and modelling. This centralized, modern data platform will empower the organization with accurate, timely, and accessible data for regulatory reporting, advanced customer analytics, risk management, and operational intelligence. By moving away from seperate data sources and fragemented reports, we aim to drive efficiency, enhance decision-making, and maintain a competitive edge in the market. 
