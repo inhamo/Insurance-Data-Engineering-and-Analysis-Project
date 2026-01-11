@@ -34,14 +34,21 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 - **Operational Efficiency:** Automate manual data consolidation processes, reducing reporting cycle times and resource costs.
 - **Advanced Analytics:** Provide a clean, modeled data foundation for Data Science and BI teams to build ML models and discover new business insights.
 
-### Architecture & Data Flow
+### 3. Architecture & Data Flow
 ---
 The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) implemented in the Microsoft Fabric platform, combining the best of data lakes and warehouses.
 
 **HIGH-LEVEL DATA ARCHITECTURE**
 ![Data Architecture](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/High-level-data-architecture.png)
 
-
+### 4. Technology Stack
+|  **Category**   |  **Technology**  |                     **Rationale**                      |
+|-----------------|------------------|--------------------------------------------------------|
+| Platform        | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
+| Storage         | Microsoft Fabric - Lakehouse - Data Warehouse | Unified platform for ETL, collaboration, and analytics |
+| Orchestration   | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
+| Processing      | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
+| Version Control | Microsoft Fabric | Unified platform for ETL, collaboration, and analytics |
 
 
 
