@@ -38,8 +38,8 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 ---
 The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) implemented in the Microsoft Fabric platform, combining the best of data lakes and warehouses.
 
-**HIGH-LEVEL DATA ARCHITECURE**
-
+**HIGH-LEVEL DATA ARCHITECTURE**
+![Data Architecture](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/blob/main/Assets/Images/High-level-data-architecture.png)
 
 
 
