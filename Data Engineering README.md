@@ -111,7 +111,12 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
 ### Phase 3: 
 
 ---
-
+How large is the data?
+How often does it change?
+What's the required query performance?
+Is this for analysis or production?
+Do you need to transform or enrich it?
+What's your team's data governance strategy?
 
 
 
