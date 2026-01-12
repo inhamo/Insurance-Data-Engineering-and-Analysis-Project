@@ -19,7 +19,7 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 
 **Key Business Objectives:**
 1. **Quantify Current State:** Determine actual loss ratios and combined ratios across all products
-2. **Identify Problem Areas:** Pinpoint specific products, segments, or regions with unsustainable loss experience
+2. **Identify Problem Areas:** Pinpoint specific products, segments, or regions with unsustainable loss experience or reasons why applicants are not renewing policies
 3. **Establish Benchmarks:** Compare performance against available industry standards.
 4. **Create Baseline Models:** Develop initial pricing and reserving models based on historical data
 5. **Building Monitoring Foundation:** Implement systems to track ongoing performance.
