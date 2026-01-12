@@ -102,12 +102,13 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
   Example: `pcd_merge_dim_customer_silver`, `pcd_insert_into_fct_transactions_silver`
 
   - **Structure: Script** `[action]_[target_object]_[layer]`  
-  Example: `merge_dim_customer_silver`, `insert_into_fct_transactions_silver`
+  Example: `sp_merge_dim_customer_silver`, `sp_insert_into_fct_transactions_silver`
 
-|     **Item**      | **Naming Conversion**         | 
-|-------------------|-------------------------------|
-| Workspace         | wk_[company]_[data]           |
-| Dataflow Gen2     | dfg2_[action]__[layer]_[data] |
+|     **Item**      | **Naming Conversion**                  | 
+|-------------------|----------------------------------------|
+| Workspace         | wk_[company]_[data]                    |
+| Dataflow Gen2     | dfg2_[action]__[layer]_[data]          |
+| Scripts           | sp_[action]__[target_object]_[layer]   |
 
 ---
 ## 7. Project Timeline & Milestones (Phased Approach)
