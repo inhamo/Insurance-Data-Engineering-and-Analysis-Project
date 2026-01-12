@@ -110,6 +110,7 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
 | Workspace         | wk_[company]_[data]                    |
 | Dataflow Gen2     | dfg2_[action]__[layer]_[data]          |
 | Scripts           | sp_[action]__[target_object]_[layer]   |
+| Pipelines         | pl_[action]__[target_object]_[layer]   |
 
 ---
 ## 7. Project Timeline & Milestones (Phased Approach)
