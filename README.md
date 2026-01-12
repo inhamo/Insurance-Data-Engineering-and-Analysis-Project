@@ -101,9 +101,10 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 
 ### Document History
 
-| Version | Date         | Author         | Changes                        |
-|---------|--------------|----------------|--------------------------------|
-| 1.0     | 10 Jan 2026  | Innocent Nhamo | Initial version created        |
+| Version | Date         | Author           | Changes                        |
+|---------|--------------|------------------|--------------------------------|
+| 1.0     | 10 Jan 2026  | Innocent Nhamo   | Initial version created        |
+| 1.1     | 13 Jan 2026  | Vincent Chitsike | Updated ReadMe with a question |
 
 
 
