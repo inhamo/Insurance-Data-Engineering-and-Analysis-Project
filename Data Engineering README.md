@@ -127,5 +127,5 @@ Do you need to transform or enrich it?
 What's your team's data governance strategy?
 
 **dataflow refreshing pipeline. reasoning - changes can be automatically executed for us**
-**Named Foreign Key Constraint**
+**Named Foreign Key Constraint.**
 
