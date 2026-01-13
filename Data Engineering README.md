@@ -126,8 +126,3 @@ What's the required query performance?
 Is this for analysis or production?
 Do you need to transform or enrich it?
 What's your team's data governance strategy?
-
-**dataflow refreshing pipeline. reasoning - changes can be automatically executed for us**
-**Named Foreign Key Constraint.**
-**Error in notebook, check if the source exists, watermark**
-**How to track the insurance_applicants_table**
