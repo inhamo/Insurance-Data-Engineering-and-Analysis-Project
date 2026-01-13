@@ -129,3 +129,4 @@ What's your team's data governance strategy?
 **dataflow refreshing pipeline. reasoning - changes can be automatically executed for us**
 **Named Foreign Key Constraint.**
 **Error in notebook, check if the source exists, watermark**
+**How to track the insurance_applicants_table**
