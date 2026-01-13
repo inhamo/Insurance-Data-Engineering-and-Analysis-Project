@@ -1,9 +1,9 @@
 # DATA ENGINEERING DOCUMENTATION
 ---
-**Project Name:** Atlas Insurance Data Warehouse (AIDW)
-**Version:** 1.0 
-**Status:** Inception 
-**Last Update:** 11 January 2026
+**Project Name:** Atlas Insurance Data Warehouse (AIDW)  
+**Version:** 1.0   
+**Status:** Inception   
+**Last Update:** 11 January 2026  
 
 ### Table of Contents
 1. [Project Charter & Executive Summary](#1-project-charter--executive-summary)  
