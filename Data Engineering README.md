@@ -170,7 +170,7 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
 - User training and documentation
 - Production handover and support model
 
-### 10. Appendices
+## 10. Appendices
 #### A. Key Business Views & Use Cases: 
 1. **Customer View 360**
 - Purpose: Unified customer profile across all touchpoints
