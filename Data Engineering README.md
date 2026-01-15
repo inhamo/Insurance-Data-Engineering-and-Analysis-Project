@@ -131,3 +131,4 @@ What's the required query performance?
 Is this for analysis or production?
 Do you need to transform or enrich it?
 What's your team's data governance strategy?
+Views- claim amount approved vs settled amount, Customer view 360, claims by type, policy performance, reinsurance exposure 
