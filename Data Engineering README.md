@@ -42,16 +42,25 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 ### 3. Architecture & Data Flow
 ---
 **Data Characteristics & Requirements:**
-- **Data Volumne:** ~ [X] TB initially, growing at ~[Y] TB/month
+- **Data Volumne:** ~ [X] MB initially, growing at ~[Y] TB/month
 - **Change Frequency:**
-  - **Real-time/Near-real-time:** Customer interactions, policy updates
   - **Daily Batch:** Transactional data, claims processing
   - **Monthly/Quarterly:** Financial reporting, regulatory data   
+- **Query Performance Requirements**
+  - **Operational queries:** < 1 second response time
+  - **Analytical queries:** < 30 seconds for complex aggregations
+  - **Batch reporting:** Completion within [X] hours window
 
 The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) implemented in the Microsoft Fabric platform, combining the best of data lakes and warehouses.
 
 **HIGH-LEVEL DATA ARCHITECTURE**
 ![Data Architecture](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/High-level-data-architecture.png)
+
+**Data Flow Details**
+- **Source Systems:** Core insurance system, CRM, claims system, external data providers (hypothetical as everything is coming from github)
+- **Ingestion Patterns:** Batch (daily) incremental loading 
+- **Processing Windows:** Daily ETL completes by 6:00 AM, monthly jobs by 3rd business day
+
 ![Applicants Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Applicants%20Data%20Model.png)
 ![Policies Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Policies%20Data%20Models.png)
 
@@ -73,7 +82,17 @@ The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) impleme
   - Data Owner
   - Data Classification (PII, Confidential, Public)
   - Retention Policy
-- **Data Quality (DQ):** DQ checks will be implemented at each layer
+- **Data Quality Framework Details:**
+  - Bronze: Schema validation, null checks, data type validation
+  - Silver: Business rule validation, referential integrity, deduplication
+  - Gold: Cross-domain consistency, aggregation accuracy
+- DQ Metrics: Completeness, accuracy, consistency, timeliness, uniqueness
+- DQ Monitoring: Automated alerts for DQ breaches, DQ dashboards
+
+**Data Classification:**
+- **PII/Confidential:** Customer data, financial information
+- **Internal:** Operational metrics, process data
+- **Public:** Aggregated reports, anonymized datasets
 
 ## 6. Naming Conventions & Standards
 
@@ -127,10 +146,74 @@ Adherence to these conventions is mandatory to ensure consistency, improve reada
 
 ---
 ## 7. Project Timeline & Milestones (Phased Approach)
-### Phase 1: 
-### Phase 2:
-### Phase 3: 
+### Phase 1: Foundation & Core Data (Weeks 1-2) 
+- Set up Fabric environment and infrastructure
+- Implement Bronze layer for key sources
+- Build Silver dimensional models (Applicants, Policy, Premium, Claims)
+- Implement basic data quality framework
+- Deliver: Customer 360 view MVP, Policy performance reports
 
+### Phase 2: Advanced Models & Analytics (Weeks 2-4)
+- Implement remaining Silver layer models
+- Build Gold layer semantic models
+- Develop key views:
+  - Claim amount approved vs settled amount
+  - Claims by type analysis
+  - Reinsurance exposure dashboard
+- Implement advanced DQ and monitoring
+- Enable Data Science team access
+  
+### Phase 3: Optimization & Expansion (Weeks 5)
+- Performance tuning and optimization
+- Implement advanced features (ML integration, real-time capabilities)
+- Expand to additional data sources
+- User training and documentation
+- Production handover and support model
+
+### 10. Appendices
+#### A. Key Business Views & Use Cases: 
+1. **Customer View 360**
+- Purpose: Unified customer profile across all touchpoints
+- Components: Demographics, policies, claims, interactions, risk score
+- Users: Marketing, Customer Service, Underwriting
+2. **Claims Analysis Suite:**
+- Approved vs Settled Amount View
+- Claims by Type & Category
+- Claims Processing Efficiency Metrics
+- Fraud Detection Indicators
+3. **Policy Performance Dashboard:**
+- Policy profitability by product line
+- Retention and lapse rates
+- Premium collection efficiency
+- Cross-sell/upsell opportunities
+4. **Reinsurance Management:**
+- Exposure by treaty type
+- Retention vs ceded amounts
+- Reinsurance cost analysis
+- Counterparty risk assessment
+  
+#### B. Technology Specifics:
+**Data Transformation Approach:**
+- Light transformations in Bronze (type casting, basic cleaning)
+- Business logic in Silver (SCD2 handling, deduplication, enrichment)
+- Aggregations and business metrics in Gold
+
+**Governance Strategy:**
+- Centralized data catalog
+- Lineage tracking
+- Access control by data classification
+- Audit logging and compliance reporting
+
+#### C. Implementation Considerations:
+- **Team Structure:** Centralized vs Federated model
+- **Skill Requirements**: SQL, PySpark, Fabric administration, data modeling
+- **Training Plan:** 2-week onboarding for business users, technical deep dives
+- **Success Metrics:**
+  - Data availability > 99.5%
+  - Report generation time reduced by 70%
+  - Manual data consolidation eliminated
+  - Regulatory reporting accuracy improved to 100%
+  
 ---
 How large is the data?
 How often does it change?
