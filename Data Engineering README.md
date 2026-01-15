@@ -41,6 +41,13 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 
 ### 3. Architecture & Data Flow
 ---
+**Data Characteristics & Requirements:**
+- **Data Volumne:** ~ [X] TB initially, growing at ~[Y] TB/month
+- **Change Frequency:**
+  - **Real-time/Near-real-time:** Customer interactions, policy updates
+  - **Daily Batch:** Transactional data, claims processing
+  - **Monthly/Quarterly:** Financial reporting, regulatory data   
+
 The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) implemented in the Microsoft Fabric platform, combining the best of data lakes and warehouses.
 
 **HIGH-LEVEL DATA ARCHITECTURE**
