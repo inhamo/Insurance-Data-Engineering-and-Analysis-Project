@@ -3,7 +3,7 @@
 [![Fabric](https://img.shields.io/badge/Microsoft%20Fabric-2.0-blue?style=flat-square&logo=microsoft)](https://fabric.microsoft.com)
 [![Lakehouse](https://img.shields.io/badge/Architecture-Medallion-green?style=flat-square)](https://www.databricks.com/glossary/medallion-architecture)
 [![Status](https://img.shields.io/badge/Phase-Bronze%20Complete-success?style=flat-square)]()
-[![Status](https://img.shields.io/badge/Phase-Silver%20Complete-success?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Silver%20Complete-success?style=flat-square)]()
 
 ---
 **Project Name:** Atlas Insurance Data Warehouse (AIDW)  
