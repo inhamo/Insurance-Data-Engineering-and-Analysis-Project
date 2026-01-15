@@ -33,7 +33,7 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 ---
 | **Name** | **Organization** | **Role** | **Contact Information** |
 |----------|------------------|----------|-------------------------|
-|Innocent | Data Engineering | Data engineer | takueinno@takueinnogmail.onmicrosoft.com |
+|Innocent | Data Engineering | Team Lead | takueinno@takueinnogmail.onmicrosoft.com |
 |Nomusa| Data Analyst and BI Intelligence | Data Analyst | Nomusa@takueinnogmail.onmicrosoft.com |
 
 ##### Data
