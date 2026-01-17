@@ -4,6 +4,7 @@
 [![Lakehouse](https://img.shields.io/badge/Architecture-Medallion-green?style=flat-square)](https://www.databricks.com/glossary/medallion-architecture)
 [![Status](https://img.shields.io/badge/Phase-Bronze%20Complete-success?style=flat-square)]()
 [![Status](https://img.shields.io/badge/Silver%20Complete-success?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Gold%20Layer-Pending-yellow?style=flat-square)]()
 
 ---
 **Project Name:** Atlas Insurance Data Warehouse (AIDW)  
