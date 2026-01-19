@@ -64,7 +64,7 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 - **Ingestion Patterns:** Batch (daily) incremental loading 
 - **Processing Windows:** Daily ETL completes by 6:00 AM, monthly jobs by 3rd business day
   
-##### 4.1 Applicants Data Model
+##### 3.1 Applicants Data Model
 **Purpose: Comprehensive view of insurance applicants including demographic, financial, employment, and health information.
 
 **Key Entities:**
@@ -76,7 +76,7 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 * **nationality:** Country and citizenship information
 ![Applicants Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Applicants%20Data%20Model.png)
 
-##### 4.2 Policies Data Model
+##### 3.2 Policies Data Model
 **Purpose:** Management of insurance policies, coverage details, and agent relationships.
 
 **Key Entities:**
@@ -89,7 +89,7 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 
 ![Policies Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Policies%20Data%20Models.png)
 
-##### 4.3 Claims Data Model
+##### 3.3 Claims Data Model
 **Purpose:** Tracking and analysis of insurance claims processing and settlement.
 ![Claims Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Claims%20Data%20Model.png)
 
@@ -97,7 +97,7 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 **dim_claim_processing_details:** Claim initiation and processing information
 **fact_claims:** Claims settlement and outcome details
 
-##### 4.4 Payments Data Model
+##### 3.4 Payments Data Model
 **Purpose:** Recording and analysis of premium payments and financial transactions.
 
 **Key Entity:**
