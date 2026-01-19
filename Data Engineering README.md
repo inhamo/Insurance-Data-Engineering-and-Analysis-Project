@@ -65,7 +65,7 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 - **Processing Windows:** Daily ETL completes by 6:00 AM, monthly jobs by 3rd business day
   
 ##### 3.1 Applicants Data Model
-**Purpose: Comprehensive view of insurance applicants including demographic, financial, employment, and health information.
+**Purpose:** Comprehensive view of insurance applicants including demographic, financial, employment, and health information.
 
 **Key Entities:**
 * **fact_applicants:** Core applicant information with personal details
