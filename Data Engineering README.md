@@ -56,17 +56,59 @@ To enable a data-driven culture at Atlas Insurance by providing a secure, scalab
 The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) implemented in the Microsoft Fabric platform, combining the best of data lakes and warehouses.
 
 **HIGH-LEVEL DATA ARCHITECTURE**
+The AIDW encompasses four core data domains, each with specialized dimensional models:
 ![Data Architecture](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/High-level-data-architecture.png)
 
 **Data Flow Details**
 - **Source Systems:** Core insurance system, CRM, claims system, external data providers (hypothetical as everything is coming from github)
 - **Ingestion Patterns:** Batch (daily) incremental loading 
 - **Processing Windows:** Daily ETL completes by 6:00 AM, monthly jobs by 3rd business day
+  
+##### 4.1 Applicants Data Model
+**Purpose: Comprehensive view of insurance applicants including demographic, financial, employment, and health information.
 
+**Key Entities:**
+* **fact_applicants:** Core applicant information with personal details
+* **banking (SCD Type 2):** Applicant bank account details with historical tracking
+* **employment (SCD Type 2):** Job and financial information with change tracking
+* **health (SCD Type 2):** Lifestyle and health factors for risk assessment
+* **demographics:** Ethnic and demographic classification
+* **nationality:** Country and citizenship information
 ![Applicants Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Applicants%20Data%20Model.png)
+
+##### 4.2 Policies Data Model
+**Purpose:** Management of insurance policies, coverage details, and agent relationships.
+
+**Key Entities:**
+* **fact_policy_coverage:** Coverage amounts, premiums, and deductibles
+* **fact_insurance_policies:** Core policy information with risk factors
+* **dim_policies_dates:** Policy lifecycle dates and tenure information
+* **dim_agents:** Insurance agent details
+* **fact_reinsurance:** Reinsurance arrangements and treaty details
+* **dim_reinsurance_companies:** Reinsurance provider information
+
 ![Policies Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Policies%20Data%20Models.png)
+
+##### 4.3 Claims Data Model
+**Purpose:** Tracking and analysis of insurance claims processing and settlement.
 ![Claims Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Claims%20Data%20Model.png)
+
+**Key Entities:**
+**dim_claim_processing_details:** Claim initiation and processing information
+**fact_claims:** Claims settlement and outcome details
+
+##### 4.4 Payments Data Model
+**Purpose:** Recording and analysis of premium payments and financial transactions.
+
+**Key Entity:**
+**payments:** Payment transactions with method and amount details
 ![Payments Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Payment%20Data%20Models.png)
+
+**Data Relationships:**
+Applicants are linked to Policies through `applicant_id`
+Policies are linked to Claims through `policy_number`
+Payments are linked to Policies through `policy_number`
+SCD Type 2 implementations track historical changes in critical dimensions
 
 ### 4. Technology Stack
 |  **Category**   |                   **Technology**                     |                     **Rationale**                      |
