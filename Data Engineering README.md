@@ -65,6 +65,8 @@ The AIDW will follow a **Medallion Architecture** (Bronze, Silver, Gold) impleme
 
 ![Applicants Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Applicants%20Data%20Model.png)
 ![Policies Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Policies%20Data%20Models.png)
+![Claims Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Claims%20Data%20Model.png)
+![Payments Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Payment%20Data%20Model.png)
 
 ### 4. Technology Stack
 |  **Category**   |                   **Technology**                     |                     **Rationale**                      |
