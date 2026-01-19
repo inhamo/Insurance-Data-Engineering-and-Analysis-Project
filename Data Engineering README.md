@@ -105,10 +105,10 @@ The AIDW encompasses four core data domains, each with specialized dimensional m
 ![Payments Model](https://raw.githubusercontent.com/inhamo/Insurance-Data-Engineering-and-Analysis-Project/main/Assets/Images/Payment%20Data%20Models.png)
 
 **Data Relationships:**
-Applicants are linked to Policies through `applicant_id`
-Policies are linked to Claims through `policy_number`
-Payments are linked to Policies through `policy_number`
-SCD Type 2 implementations track historical changes in critical dimensions
+* Applicants are linked to Policies through `applicant_id`.
+* Policies are linked to Claims through `policy_number`.
+* Payments are linked to Policies through `policy_number`.
+* SCD Type 2 implementations track historical changes in critical dimensions
 
 ### 4. Technology Stack
 |  **Category**   |                   **Technology**                     |                     **Rationale**                      |
