@@ -1,0 +1,60 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only banking-related columns
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {"Customer_ID", "Bank_Name", "Bank_Account"}
+        ),
+
+    // 3. Rename columns consistently
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {
+                {"Customer_ID", "applicant_id"},
+                {"Bank_Name", "bank_name"},
+                {"Bank_Account", "bank_account_number"}
+            }
+        ),
+
+    // 4. Normalize text
+    NormalizedText =
+        Table.TransformColumns(
+            RenamedColumns,
+            {{"bank_name", each Text.Upper(Text.Trim(_)), type nullable text}}
+        ),
+
+    // 5. Add surrogate key
+    AddedSurrogateKey =
+        Table.AddIndexColumn(
+            NormalizedText,
+            "banking_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+
+    // 6. Reorder columns
+    ReorderedColumns =
+        Table.ReorderColumns(
+            AddedSurrogateKey,
+            {"banking_sk", "applicant_id", "bank_name", "bank_account_number"}
+        ),
+
+    // 7. Add 'is_current' flag for SCD handling
+    AddedCurrentFlag =
+        Table.AddColumn(
+            ReorderedColumns,
+            "is_current",
+            each 1,
+            Int64.Type
+        )
+in
+    AddedCurrentFlag

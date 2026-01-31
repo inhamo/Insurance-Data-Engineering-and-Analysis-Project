@@ -1,0 +1,10 @@
+let
+    Source = Lakehouse.Contents(null){[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data],
+    ClaimsTable = Source{[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]{[Id = "claims_history", ItemKind = "Table"]}[Data],
+    SelectColumns = Table.SelectColumns(ClaimsTable, {"Claim_ID", "Policy_Number", "Claim_Type", "Claim_Amount", "Date_of_Claim", "Claim_Handler"}),
+  #"Trimmed and Uppercased Text" = Table.TransformColumns(SelectColumns, {{"Claim_Handler", each Text.Upper(Text.Trim(_)), type nullable text}, {"Claim_Type", each Text.Upper(Text.Trim(_)), type nullable text}}),
+  #"Changed column type" = Table.TransformColumnTypes(#"Trimmed and Uppercased Text", {{"Date_of_Claim", type date}}),
+  #"Renamed columns" = Table.RenameColumns(#"Changed column type", {{"Claim_ID", "claim_id"}, {"Policy_Number", "policy_number"}, {"Claim_Type", "claim_type"}, {"Claim_Amount", "claim_amount"}, {"Date_of_Claim", "date_of_claim"}, {"Claim_Handler", "claim_handler"}}),
+  #"Removed duplicates" = Table.Distinct(#"Renamed columns", {"claim_id", "policy_number", "claim_type", "claim_amount", "date_of_claim", "claim_handler"})
+in
+    #"Removed duplicates"

@@ -1,0 +1,104 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only relevant business key & attributes
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {
+                "Customer_ID",
+                "Name",
+                "Demographic",
+                "Gender",
+                "Age",
+                "Date_of_Birth",
+                "ID_Number",
+                "Nationality",
+                "Proof_of_Address"
+            }
+        ),
+  #"Marked key columns" = Table.AddKey(SelectedColumns, {"Customer_ID"}, false),
+
+    // 3. Rename to consistent analytics names
+    RenamedColumns =
+        Table.RenameColumns(
+            #"Marked key columns",
+            {
+                {"Customer_ID", "applicant_id"},
+                {"Name", "full_name"},
+                {"Demographic", "ethnicity"},
+                {"Gender", "gender"},
+                {"Date_of_Birth", "date_of_birth"},
+                {"ID_Number", "id_number"},
+                {"Nationality", "nationality"},
+                {"Proof_of_Address", "proof_of_address_document"}
+            }
+        ),
+
+    // 4. Trim and uppercase text for consistency
+    NormalizedText =
+        Table.TransformColumns(
+            RenamedColumns,
+            {
+                {"applicant_id", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"full_name", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"ethnicity", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"gender", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"nationality", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"proof_of_address_document", each Text.Upper(Text.Trim(_)), type nullable text}
+            }
+        ),
+  #"Removed duplicates" = Table.Distinct(NormalizedText, {"applicant_id"}),
+
+    // 5. Add surrogate key last
+    AddedSurrogateKey =
+        Table.AddIndexColumn(#"Removed duplicates", "applicant_sk", 1, 1, Int64.Type),
+
+    // 6. Merge with demographic dimension
+    MergeDemographic =
+        Table.NestedJoin(
+            AddedSurrogateKey,
+            {"ethnicity"},
+            demographic,
+            {"ethnicity"},
+            "demographic_lookup",
+            JoinKind.LeftOuter
+        ),
+
+    // 7. Merge with nationality dimension (use temporary join name)
+    MergeNationality =
+        Table.NestedJoin(
+            MergeDemographic,
+            {"nationality"},
+            nationality,
+            {"country"},
+            "nationality_lookup",
+            JoinKind.LeftOuter
+        ),
+
+    // 8. Expand only surrogate keys
+    ExpandedDemographic =
+        Table.ExpandTableColumn(
+            MergeNationality,
+            "demographic_lookup",
+            {"demographic_sk"},
+            {"demographic_sk"}
+        ),
+    ExpandedNationality =
+        Table.ExpandTableColumn(
+            ExpandedDemographic,
+            "nationality_lookup",
+            {"nationality_sk"},
+            {"nationality_sk"}
+        ),
+
+    // 9. Remove original text columns replaced by surrogate keys
+    CleanedColumns =
+        Table.RemoveColumns(ExpandedNationality, {"ethnicity", "nationality"})
+in
+    CleanedColumns

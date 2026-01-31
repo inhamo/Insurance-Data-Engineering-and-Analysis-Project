@@ -1,0 +1,63 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only employment/financial columns
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {"Customer_ID", "Job_Title", "Monthly_Income_ZAR", "Assets_Value_ZAR", "Debts_Value_ZAR", "Credit_Score"}
+        ),
+
+    // 3. Rename for analytics consistency
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {
+                {"Customer_ID", "applicant_id"},
+                {"Job_Title", "job_title"},
+                {"Monthly_Income_ZAR", "monthly_income_zar"},
+                {"Assets_Value_ZAR", "owned_assets_value_zar"},
+                {"Debts_Value_ZAR", "owned_debt_value_zar"},
+                {"Credit_Score", "credit_score"}
+            }
+        ),
+
+    // 4. Normalize text
+    NormalizedText =
+        Table.TransformColumns(
+            RenamedColumns,
+            {{"job_title", each Text.Upper(Text.Trim(_)), type nullable text}}
+        ),
+
+    // 5. Add surrogate key
+    AddedSurrogateKey =
+        Table.AddIndexColumn(
+            NormalizedText,
+            "employment_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+
+    // 6. Reorder columns for readability
+    ReorderedColumns =
+        Table.ReorderColumns(
+            AddedSurrogateKey,
+            {"employment_sk", "applicant_id", "job_title", "monthly_income_zar", "owned_assets_value_zar", "owned_debt_value_zar", "credit_score"}
+        ),
+
+    // 7. Add 'is_current' flag for SCD handling
+    AddedCurrentFlag =
+        Table.AddColumn(
+            ReorderedColumns,
+            "is_current",
+            each 1,
+            Int64.Type
+        )
+in
+    AddedCurrentFlag

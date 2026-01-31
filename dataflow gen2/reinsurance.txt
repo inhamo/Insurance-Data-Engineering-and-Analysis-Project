@@ -1,0 +1,94 @@
+let
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data],
+
+    InsurancePolicies =
+        Source{[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+
+    // Select ONLY required columns upfront
+    SelectedColumns =
+        Table.SelectColumns(
+            InsurancePolicies,
+            {
+                "Policy_Number",
+                "Has_XOL",
+                "Is_Reinsured",
+                "Reinsurance_Company",
+                "Reinsurance_Share",
+                "XOL_Retention_Amount",
+                "Reinsurance_Type"
+            }
+        ),
+
+    // Rename once
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {
+                {"Policy_Number", "policy_number"},
+                {"Has_XOL", "has_excess_of_loss"},
+                {"Is_Reinsured", "is_reinsured"},
+                {"Reinsurance_Company", "reinsurance_company"},
+                {"Reinsurance_Share", "reinsurance_share"},
+                {"XOL_Retention_Amount", "excess_of_loss_retention_amount"},
+                {"Reinsurance_Type", "reinsurance_type"}
+            }
+        ),
+
+    // Normalize text in a single transform
+    NormalizedText =
+        Table.TransformColumns(
+            RenamedColumns,
+            {
+                {"reinsurance_company", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"reinsurance_type", each Text.Upper(Text.Trim(_)), type nullable text}
+            }
+        ),
+
+    // Keep only reinsured policies
+    FilteredReinsurance =
+        Table.SelectRows(
+            NormalizedText,
+            each [reinsurance_company] <> null
+        ),
+
+    // Type casting after filtering
+    TypedColumns =
+        Table.TransformColumnTypes(
+            FilteredReinsurance,
+            {
+                {"has_excess_of_loss", Int64.Type},
+                {"is_reinsured", Int64.Type}
+            }
+        ),
+
+    // Join to reinsurance company dimension
+    JoinedReinsuranceCompany =
+        Table.NestedJoin(
+            TypedColumns,
+            {"reinsurance_company"},
+            reinsurance_companies,
+            {"reinsurance_company"},
+            "rc",
+            JoinKind.LeftOuter
+        ),
+
+    // Expand surrogate key only
+    ExpandedJoin =
+        Table.ExpandTableColumn(
+            JoinedReinsuranceCompany,
+            "rc",
+            {"reinsurance_company_sk"},
+            {"reinsurance_company_sk"}
+        ),
+
+    // Drop business text column after key resolution
+    Final =
+        Table.RemoveColumns(
+            ExpandedJoin,
+            {"reinsurance_company"}
+        )
+in
+    Final

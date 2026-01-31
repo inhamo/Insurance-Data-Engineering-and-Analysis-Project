@@ -1,0 +1,153 @@
+let
+
+    // Source (single navigation chain)
+
+    Source =
+
+        Lakehouse.Contents(null){[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+ 
+    // Select only columns actually required (instead of RemoveColumns)
+
+    SelectedColumns =
+
+        Table.SelectColumns(
+
+            Source,
+
+            {
+
+                "Policy_Number",
+
+                "Applicant_ID",
+
+                "Policy_Type",
+
+                "Policy_Subtype",
+
+                "Agent_Name",
+
+                "Channel",
+
+                "Risk_Factor",
+
+                "Discount_Percentage", 
+
+                "Payment_Frequency"
+
+            }
+
+        ),
+ 
+    // Normalize text columns in ONE pass (trim + uppercase)
+
+    NormalizedText =
+
+        Table.TransformColumns(
+
+            SelectedColumns,
+
+            {
+
+                {"Policy_Type", each Text.Upper(Text.Trim(_)), type text},
+
+                {"Policy_Subtype", each Text.Upper(Text.Trim(_)), type text},
+
+                {"Channel", each Text.Upper(Text.Trim(_)), type text},
+
+                {"Agent_Name", each Text.Upper(Text.Trim(_)), type text}, 
+
+                {"Payment_Frequency", each Text.Upper(Text.Trim(_)), type text}
+
+            }
+
+        ),
+ 
+    // Join to policy dimension
+
+    JoinedPolicies =
+
+        Table.NestedJoin(
+
+            NormalizedText,
+
+            {"Policy_Type", "Policy_Subtype"},
+
+            policies,
+
+            {"policy_type", "policy_sub_type"},
+
+            "policies",
+
+            JoinKind.LeftOuter
+
+        ),
+ 
+    // Join to agent dimension
+
+    JoinedAgents =
+
+        Table.NestedJoin(
+
+            JoinedPolicies,
+
+            {"Agent_Name"},
+
+            agents,
+
+            {"agent_name"},
+
+            "agents",
+
+            JoinKind.LeftOuter
+
+        ),
+ 
+    // Expand surrogate keys only
+
+    ExpandedKeys =
+
+        Table.ExpandTableColumn(
+
+            Table.ExpandTableColumn(
+
+                JoinedAgents,
+
+                "policies",
+
+                {"policy_sk"},
+
+                {"policy_sk"}
+
+            ),
+
+            "agents",
+
+            {"agent_sk"},
+
+            {"agent_sk"}
+
+        ),
+ 
+    // Remove natural keys AFTER surrogate keys exist
+
+    RemovedNaturalKeys =
+
+        Table.RemoveColumns(
+
+            ExpandedKeys,
+
+            {"Policy_Type", "Policy_Subtype", "Agent_Name"}
+
+        ),
+ 
+    // Final renaming (analytics-friendly)
+
+    RenamedColumns =
+
+        Table.RenameColumns(RemovedNaturalKeys, {{"Policy_Number", "policy_number"}, {"Applicant_ID", "applicant_id"}, {"Risk_Factor", "risk_factor"}, {"Discount_Percentage", "discount_percentage"}, {"Channel", "channel"}, {"Payment_Frequency", "payment_frequency"}})
+ 
+in
+
+    RenamedColumns

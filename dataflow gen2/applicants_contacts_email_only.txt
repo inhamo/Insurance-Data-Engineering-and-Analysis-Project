@@ -1,0 +1,28 @@
+let
+    // 1. Source: email contacts
+    SourceEmail =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only applicant_id and email
+    SelectedColumns =
+        Table.SelectColumns(SourceEmail, {"Customer_ID", "Email"}),
+
+    // 3. Trim and normalize email
+    NormalizedEmail =
+        Table.TransformColumns(
+            SelectedColumns,
+            {{"Email", each Text.Upper(Text.Trim(_)), type text}}
+        ),
+
+    // 4. Rename columns
+    RenamedColumns =
+        Table.RenameColumns(NormalizedEmail, {{"Customer_ID", "applicant_id"}, {"Email", "contact"}}),
+
+    // 5. Add contact type
+    AddedContactType =
+        Table.AddColumn(RenamedColumns, "contact_type", each "EMAIL", type text)
+in
+    AddedContactType

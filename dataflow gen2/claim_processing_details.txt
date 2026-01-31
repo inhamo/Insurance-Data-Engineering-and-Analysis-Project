@@ -1,0 +1,12 @@
+let
+    Source = Lakehouse.Contents(null){[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data],
+    ClaimsTable = Source{[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]{[Id = "claims_history", ItemKind = "Table"]}[Data],
+    SelectRemovedColumns = Table.SelectColumns(ClaimsTable, 
+        {"Claim_ID", "Status", "Settlement_Amount", "Date_of_Settlement", 
+         "Processing_Days", "Complexity_Level", "Documentation_Status"}),
+  #"Trimmed text" = Table.TransformColumns(SelectRemovedColumns, {{"Status", each Text.Upper(Text.Trim(_)), type nullable text}, {"Documentation_Status", each Text.Upper(Text.Trim(_)), type nullable text}, {"Complexity_Level", each Text.Upper(Text.Trim(_)), type nullable text}}),
+  #"Changed column type" = Table.TransformColumnTypes(#"Trimmed text", {{"Date_of_Settlement", type date}}),
+  #"Renamed columns" = Table.RenameColumns(#"Changed column type", {{"Claim_ID", "claim_id"}, {"Status", "claim_status"}, {"Settlement_Amount", "settlement_amount"}, {"Date_of_Settlement", "date_of_settlement"}, {"Processing_Days", "processing_days"}, {"Complexity_Level", "complexity_level"}, {"Documentation_Status", "documentation_status"}}),
+  #"Removed duplicates" = Table.Distinct(#"Renamed columns", {"claim_id", "claim_status", "settlement_amount", "date_of_settlement", "processing_days", "complexity_level", "documentation_status"})
+in
+    #"Removed duplicates"

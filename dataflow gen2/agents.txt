@@ -1,0 +1,50 @@
+let
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data],
+
+    InsurancePolicies =
+        Source{[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+
+    // Select only the business key needed for the dimension
+    SelectedColumns =
+        Table.SelectColumns(
+            InsurancePolicies,
+            {"Agent_Name"}
+        ),
+
+    // Clean and standardise BEFORE deduplication
+    NormalizedAgentName =
+        Table.TransformColumns(
+            SelectedColumns,
+            {
+                {"Agent_Name", each Text.Upper(Text.Trim(_)), type nullable text}
+            }
+        ),
+
+    // Remove duplicates after standardisation
+    DistinctAgents =
+        Table.Distinct(
+            NormalizedAgentName,
+            {"Agent_Name"}
+        ),
+
+    // Rename to model-friendly name
+    RenamedColumns =
+        Table.RenameColumns(
+            DistinctAgents,
+            {{"Agent_Name", "agent_name"}}
+        ),
+
+    // Add surrogate key LAST
+    AgentDim =
+        Table.AddIndexColumn(
+            RenamedColumns,
+            "agent_sk",
+            1,
+            1,
+            Int64.Type
+        )
+in
+    AgentDim

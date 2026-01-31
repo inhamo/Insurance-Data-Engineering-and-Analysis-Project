@@ -1,0 +1,11 @@
+let
+  Source = Lakehouse.Contents(null),
+  Navigation = Source{[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data],
+  #"Navigation 1" = Navigation{[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data],
+  #"Navigation 2" = #"Navigation 1"{[Id = "payment_history", ItemKind = "Table"]}[Data],
+  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 2", {{"Payment_Date", type date}}),
+  TextNormalized = Table.TransformColumns(#"Changed column type", {{"Payment_Method", each Text.Upper(Text.Trim(_)), type nullable text}}),
+  #"Renamed columns" = Table.RenameColumns(TextNormalized, {{"Payment_ID", "payment_id"}, {"Policy_Number", "policy_number"}, {"Payment_Date", "payment_date"}, {"Amount_Paid", "amount_paid"}, {"Payment_Method", "payment_method"}}),
+  #"Removed duplicates" = Table.Distinct(#"Renamed columns", {"payment_id", "policy_number", "payment_date", "amount_paid", "payment_method"})
+in
+  #"Removed duplicates"

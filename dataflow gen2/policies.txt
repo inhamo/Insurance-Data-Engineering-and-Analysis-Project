@@ -1,0 +1,28 @@
+let
+  Source = Lakehouse.Contents(null),
+  Navigation = Source{[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data],
+  #"Navigation 1" = Navigation{[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data],
+  #"Navigation 2" = #"Navigation 1"{[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+  
+  // Select only needed columns first (reduces data flow)
+  #"Selected columns" = Table.SelectColumns(#"Navigation 2", {"Policy_Type", "Policy_Subtype"}),
+  
+  // Remove duplicates early
+  #"Distinct rows" = Table.Distinct(#"Selected columns", {"Policy_Type", "Policy_Subtype"}),
+  
+  // Apply all transformations in one step
+  #"Transformed" = Table.TransformColumns(#"Distinct rows", {
+    {"Policy_Type", each Text.Upper(Text.Trim(_)), type nullable text},
+    {"Policy_Subtype", each Text.Upper(Text.Trim(_)), type nullable text}
+  }),
+  
+  // Add key and reorder
+  #"With key" = Table.AddIndexColumn(#"Transformed", "policy_sk", 1, 1, Int64.Type),
+  
+  // Final column order and rename
+  #"Final" = Table.RenameColumns(
+    Table.SelectColumns(#"With key", {"policy_sk", "Policy_Type", "Policy_Subtype"}),
+    {{"Policy_Type", "policy_type"}, {"Policy_Subtype", "policy_sub_type"}}
+  )
+in
+  #"Final"

@@ -1,0 +1,48 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only Nationality
+    SelectedColumns =
+        Table.SelectColumns(Source, {"Nationality"}),
+
+    // 3. Remove duplicates
+    DistinctValues =
+        Table.Distinct(SelectedColumns, {"Nationality"}),
+
+    // 4. Normalize text
+    NormalizedText =
+        Table.TransformColumns(
+            DistinctValues,
+            {{"Nationality", each Text.Upper(Text.Trim(_)), type text}}
+        ),
+
+    // 5. Add surrogate key
+    AddedSurrogateKey =
+        Table.AddIndexColumn(
+            NormalizedText,
+            "nationality_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+
+    // 6. Rename column for analytics consistency
+    RenamedColumns =
+        Table.RenameColumns(
+            AddedSurrogateKey,
+            {{"Nationality", "country"}}
+        ),
+
+    // 7. Reorder columns
+    ReorderedColumns =
+        Table.ReorderColumns(
+            RenamedColumns,
+            {"nationality_sk", "country"}
+        )
+in
+    ReorderedColumns

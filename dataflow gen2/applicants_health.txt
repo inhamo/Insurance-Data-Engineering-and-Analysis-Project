@@ -1,0 +1,126 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only relevant health-related columns
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {
+                "Customer_ID",
+                "Is_Smoker",
+                "Smoker_Years",
+                "Previous_Smoker",
+                "Years_Since_Quit",
+                "Alcohol_Use",
+                "Alcohol_Units_Per_Week",
+                "Long_Term_Medication",
+                "Medication_Since_Years"
+            }
+        ),
+
+    // 3. Rename columns for consistency
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {
+                {"Customer_ID", "applicant_id"},
+                {"Is_Smoker", "is_current_smoker"},
+                {"Smoker_Years", "no_of_smoking_years"},
+                {"Previous_Smoker", "is_previous_smoker"},
+                {"Years_Since_Quit", "years_since_quit_smoking"},
+                {"Alcohol_Use", "alcohol_usage"},
+                {"Alcohol_Units_Per_Week", "alcohol_units_per_week"},
+                {"Long_Term_Medication", "is_on_long_term_medication"},
+                {"Medication_Since_Years", "no_of_years_on_medication"}
+            }
+        ),
+
+    // 4. Normalize text columns
+    NormalizedText =
+        Table.TransformColumns(
+            RenamedColumns,
+            {
+                {"is_current_smoker", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"is_previous_smoker", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"alcohol_usage", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"is_on_long_term_medication", each Text.Upper(Text.Trim(_)), type nullable text}
+            }
+        ),
+
+    // 5. Feature Engineering
+    AddDualSubstanceUse =
+        Table.AddColumn(
+            NormalizedText,
+            "dual_substance_use",
+            each
+                if [is_current_smoker] = "YES" and [alcohol_usage] <> "NONE" then "SMOKER & DRINKER"
+                else if [is_current_smoker] = "NO" and [alcohol_usage] <> "NONE" then "DRINKER ONLY"
+                else if [is_current_smoker] = "YES" and [alcohol_usage] = "NONE" then "SMOKER ONLY"
+                else "NONE",
+            type text
+        ),
+
+    AddSmokerCategory =
+        Table.AddColumn(
+            AddDualSubstanceUse,
+            "smoker_category",
+            each
+                if [is_current_smoker] = "YES" then "CURRENT"
+                else if [is_current_smoker] = "NO" and [is_previous_smoker] = "YES" then "FORMER"
+                else if [is_current_smoker] = "NO" and [is_previous_smoker] = "NO" then "NEVER"
+                else "UNKNOWN",
+            type text
+        ),
+
+    AddQuitSuccessScore =
+        Table.AddColumn(
+            AddSmokerCategory,
+            "quit_success_score",
+            each
+                if [is_current_smoker] = "YES" then "CURRENT SMOKER"
+                else if [is_current_smoker] = "NO" and [is_previous_smoker] = "YES" and [years_since_quit_smoking] > 5 then "LONG-TERM QUITTER"
+                else if [is_current_smoker] = "NO" and [is_previous_smoker] = "YES" and [years_since_quit_smoking] <= 5 then "RECENT QUITTER"
+                else if [is_current_smoker] = "NO" and [is_previous_smoker] = "NO" then "NEVER SMOKED"
+                else "UNKNOWN",
+            type text
+        ),
+  #"Marked key columns" = Table.AddKey(AddQuitSuccessScore, {"applicant_id"}, false),
+  #"Removed duplicates" = Table.Distinct(#"Marked key columns", {"applicant_id"}),
+
+    // 6. Add surrogate key for this dimension
+    AddedSurrogateKey =
+        Table.AddIndexColumn(
+            #"Removed duplicates",
+            "health_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+
+    // 7. Reorder columns for readability
+    ReorderedColumns =
+        Table.ReorderColumns(
+            AddedSurrogateKey,
+            {
+                "health_sk",
+                "applicant_id",
+                "is_current_smoker",
+                "no_of_smoking_years",
+                "is_previous_smoker",
+                "years_since_quit_smoking",
+                "alcohol_usage",
+                "alcohol_units_per_week",
+                "is_on_long_term_medication",
+                "no_of_years_on_medication",
+                "dual_substance_use",
+                "smoker_category",
+                "quit_success_score"
+            }
+        )
+in
+    ReorderedColumns

@@ -1,0 +1,44 @@
+let
+    // Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+
+    // Keep only relevant numeric attributes for analytics
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {
+                "Policy_Number",
+                "Applicant_ID",
+                "Coverage_Amount",
+                "Premium_Amount",
+                "Deductible_Amount"
+            }
+        ),
+
+    // Rename for analytics consistency
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {
+                {"Policy_Number", "policy_number"},
+                {"Applicant_ID", "applicant_id"},
+                {"Coverage_Amount", "coverage"},
+                {"Premium_Amount", "premium"},
+                {"Deductible_Amount", "deductible"}
+            }
+        ),
+
+    // Feature Engineering: Insurer exposure after deductible
+    Exposure =
+        Table.AddColumn(
+            RenamedColumns,
+            "exposure_amount",
+            each [coverage] - [deductible],
+            type number
+        )
+in
+    Exposure

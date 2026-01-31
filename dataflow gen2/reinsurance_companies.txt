@@ -1,0 +1,56 @@
+let
+    // Source (single navigation chain)
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+ 
+    // Select only the column we actually need
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {"Reinsurance_Company"}
+        ),
+ 
+    // Filter early (better folding + less data processed)
+    Filtered =
+        Table.SelectRows(
+            SelectedColumns,
+            each [Reinsurance_Company] <> null
+                and Text.Trim([Reinsurance_Company]) <> ""
+        ),
+ 
+    // Normalize text in ONE pass (trim + uppercase)
+    Normalized =
+        Table.TransformColumns(
+            Filtered,
+            {{"Reinsurance_Company", each Text.Upper(Text.Trim(_)), type text}}
+        ),
+ 
+    // Deduplicate
+    DistinctCompanies =
+        Table.Distinct(
+            Normalized,
+            {"Reinsurance_Company"}
+        ),
+ 
+    // Add surrogate key
+    WithKey =
+        Table.AddIndexColumn(
+            DistinctCompanies,
+            "reinsurance_company_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+ 
+    // Final rename
+    Final =
+        Table.RenameColumns(
+            WithKey,
+            {{"Reinsurance_Company", "reinsurance_company"}}
+        )
+ 
+in
+    Final

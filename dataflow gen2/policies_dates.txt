@@ -1,0 +1,58 @@
+let
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data],
+
+    InsurancePolicies =
+        Source{[Id = "insurance_policies", ItemKind = "Table"]}[Data],
+
+    // Keep only the columns needed for this fact
+    SelectedColumns =
+        Table.SelectColumns(
+            InsurancePolicies,
+            {
+                "Policy_Number",
+                "Effective_Date",
+                "Expiration_Date",
+                "Renewal_Notice_Date"
+            }
+        ),
+
+    // Convert datetime to date
+    DatesAsDate =
+        Table.TransformColumnTypes(
+            SelectedColumns,
+            {
+                {"Effective_Date", type date},
+                {"Expiration_Date", type date},
+                {"Renewal_Notice_Date", type date}
+            }
+        ),
+
+    // Rename to consistent model-friendly names
+    RenamedColumns =
+        Table.RenameColumns(
+            DatesAsDate,
+            {
+                {"Policy_Number", "policy_number"},
+                {"Effective_Date", "effective_date"},
+                {"Expiration_Date", "expiration_date"},
+                {"Renewal_Notice_Date", "renewal_notice_date"}
+            }
+        ),
+
+    // Compute policy tenure in days
+    AddPolicyTenure =
+        Table.TransformColumnTypes(Table.AddColumn(RenamedColumns, "policy_tenure_days", each Duration.Days([expiration_date] - [effective_date])), {{"policy_tenure_days", Int64.Type}}),
+
+    // Compute days before renewal notice
+    AddRenewalDays =
+        Table.AddColumn(
+            AddPolicyTenure,
+            "renewal_days_before_expiration",
+            each Duration.Days([expiration_date] - [renewal_notice_date]),
+            Int64.Type
+        )
+in
+    AddRenewalDays

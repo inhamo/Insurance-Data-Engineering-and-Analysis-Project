@@ -1,0 +1,39 @@
+let
+    // 1. Source: phone contacts
+    SourcePhone =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only applicant_id and phone
+    PhoneColumns =
+        Table.SelectColumns(SourcePhone, {"Customer_ID", "Phone"}),
+
+    // 3. Rename columns and mark type
+    RenamedPhone =
+        Table.RenameColumns(PhoneColumns, {{"Customer_ID", "applicant_id"}, {"Phone", "contact"}}),
+    AddPhoneType =
+        Table.AddColumn(RenamedPhone, "contact_type", each "PHONE", type text),
+
+    // 4. Combine with prebuilt email-only table
+    CombinedContacts =
+        Table.Combine({AddPhoneType, applicants_contacts_email_only}),
+
+    // 5. Remove duplicates if any (applicant + contact + type)
+    DistinctContacts =
+        Table.Distinct(CombinedContacts, {"applicant_id", "contact", "contact_type"}),
+
+    // 6. Add surrogate key
+    AddedSurrogateKey =
+        Table.AddIndexColumn(DistinctContacts, "contact_sk", 1, 1, Int64.Type),
+
+    // 7. Reorder columns
+    ReorderedColumns =
+        Table.ReorderColumns(AddedSurrogateKey, {"contact_sk", "applicant_id", "contact", "contact_type"}),
+
+    // 8. Add SCD flag
+    AddedCurrentFlag =
+        Table.AddColumn(ReorderedColumns, "is_current", each 1, Int64.Type)
+in
+    AddedCurrentFlag

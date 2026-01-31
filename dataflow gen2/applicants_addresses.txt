@@ -1,0 +1,76 @@
+let
+    // 1. Source
+    Source =
+        Lakehouse.Contents(null)
+            {[workspaceId = "8d8770af-d77b-4909-a4e3-da757e58fc32"]}[Data]
+            {[lakehouseId = "4a97b1e3-de51-46e3-aec4-7c773b33376a"]}[Data]
+            {[Id = "insurance_applicants", ItemKind = "Table"]}[Data],
+
+    // 2. Keep only relevant columns for address
+    SelectedColumns =
+        Table.SelectColumns(
+            Source,
+            {"Customer_ID", "Address"}
+        ),
+
+    // 3. Rename for analytics consistency
+    RenamedColumns =
+        Table.RenameColumns(
+            SelectedColumns,
+            {{"Customer_ID", "applicant_id"}, {"Address", "full_address"}}
+        ),
+
+    // 4. Split address into components
+    SplitAddress =
+        Table.SplitColumn(
+            RenamedColumns,
+            "full_address",
+            Splitter.SplitTextByDelimiter(","),
+            {"street_address", "city", "province", "postal_code"}
+        ),
+
+    // 5. Fix column types
+    TypedColumns =
+        Table.TransformColumnTypes(
+            SplitAddress,
+            {{"street_address", type text}, {"city", type text}, {"province", type text}, {"postal_code", Int64.Type}}
+        ),
+
+    // 6. Trim and uppercase for consistency
+    NormalizedText =
+        Table.TransformColumns(
+            TypedColumns,
+            {
+                {"street_address", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"city", each Text.Upper(Text.Trim(_)), type nullable text},
+                {"province", each Text.Upper(Text.Trim(_)), type nullable text}
+            }
+        ),
+
+    // 7. Add surrogate key for addresses
+    AddedSurrogateKey =
+        Table.AddIndexColumn(
+            NormalizedText,
+            "address_sk",
+            1,
+            1,
+            Int64.Type
+        ),
+
+    // 8. Reorder columns
+    ReorderedColumns =
+        Table.ReorderColumns(
+            AddedSurrogateKey,
+            {"address_sk", "applicant_id", "street_address", "city", "province", "postal_code"}
+        ),
+
+    // 9. Add 'is_current' flag (Kimball degenerate flag)
+    AddedCurrentFlag =
+        Table.AddColumn(
+            ReorderedColumns,
+            "is_current",
+            each 1,
+            Int64.Type
+        )
+in
+    AddedCurrentFlag
